@@ -42,7 +42,7 @@ public class FTUdpClient {
 			//socket = new DatagramSocket();
 			socket = new MyDatagramSocket();
 			
-			//create producer/consumer queue for ACKS
+			//create producer/consumer queue for ACKs
 			receiverQueue = new ArrayBlockingQueue<>(1);
 
 			//start a receiver process to feed the queue
@@ -53,10 +53,10 @@ public class FTUdpClient {
 						DatagramPacket msg = new DatagramPacket(buffer, buffer.length);
 						socket.receive(msg);
 						
-						// update server address (it may answer to WRQ from a different port.
+						// update server address (it may change due to WRQ coming from a different port
 						srvAddress = msg.getSocketAddress();
 						
-						// make the packet available to sender process.
+						// make the packet available to sender process
 						TftpPacket pkt = new TftpPacket(msg.getData(), msg.getLength());
 						receiverQueue.put(pkt);
 					}
