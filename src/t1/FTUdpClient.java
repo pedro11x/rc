@@ -122,11 +122,11 @@ public class FTUdpClient {
 //							}
 //					}
 					
-					System.out.println("next timeout "+nextTimeout);
-					//while(nextTimeout>0){
+					//System.out.println("next timeout "+nextTimeout);
+					do{
 						long start = System.currentTimeMillis();
 						TftpPacket ack = receiverQueue.poll(nextTimeout, TimeUnit.MILLISECONDS);
-						if (ack != null)
+						if (ack != null){
 							if (ack.getOpcode() == OP_ACK){
 								long sn = ack.getBlockSeqN();
 								if (window.get(sn) != null) {
@@ -135,12 +135,16 @@ public class FTUdpClient {
 								}
 							}
 							else {
-								System.err.println("error +++ (unexpected packet)");
+								//System.err.println("error +++ (unexpected packet)");
 							}
-						nextTimeout = nextTimeout - System.currentTimeMillis() - start;
-						System.out.println(receiverQueue.size());
-					//}
-						
+						}
+						else
+							break;
+						nextTimeout = nextTimeout - (System.currentTimeMillis() - start);
+					}while(nextTimeout>0 && !receiverQueue.isEmpty());
+					
+					//System.out.println(receiverQueue.size());
+					//System.out.println("next timeout "+nextTimeout);
 					nextTimeout = Timeout;
 					
 					for(WindowSlot s: window.values()){

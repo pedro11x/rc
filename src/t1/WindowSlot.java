@@ -21,7 +21,7 @@ public class WindowSlot extends TftpPacket {
 	}
 	
 	public long timeout(int timeout) {
-		return timeout - System.currentTimeMillis() - time;
+		return timeout - (System.currentTimeMillis() - time);
 		
 	}
 	
